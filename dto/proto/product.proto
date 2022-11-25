@@ -1,0 +1,19 @@
+
+syntax = "proto3";
+
+option go_package = "github.com/w-woong/product/dto/proto";
+
+package proto;
+
+service Product {
+    rpc ReadProduct(ProductRequest) returns (ProductResponse) {}
+}
+
+message ProductRequest {
+    string id = 1;
+}
+
+message ProductResponse {
+    string id = 1;
+    string name = 2;
+}
