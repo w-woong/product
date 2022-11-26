@@ -51,3 +51,32 @@ func (d *ProductHttpHandler) HandleFindProduct(w http.ResponseWriter, r *http.Re
 		return
 	}
 }
+
+func (d *ProductHttpHandler) HandleFindProductsByGroupID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	products, err := d.usc.FindProductsByGroupID(r.Context(), id)
+	if err != nil {
+		if errors.Is(err, common.ErrRecordNotFound) {
+			if err := common.HttpBodyRecordNotFound.EncodeTo(w); err != nil {
+				logger.Error(err.Error(), logger.UrlField(r.URL.String()))
+			}
+			return
+		}
+		common.HttpError(w, http.StatusInternalServerError)
+		logger.Error(err.Error(), logger.UrlField(r.URL.String()))
+		return
+	}
+
+	resBody := common.HttpBody{
+		Status:    http.StatusOK,
+		Count:     len(products),
+		Documents: &products,
+	}
+
+	if err := resBody.EncodeTo(w); err != nil {
+		logger.Error(err.Error(), logger.UrlField(r.URL.String()))
+		return
+	}
+}

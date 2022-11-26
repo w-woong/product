@@ -99,7 +99,7 @@ func main() {
 	switch conf.Server.Repo.Driver {
 	case "pgx":
 		gormDB, err = sigorm.OpenPostgres(sqlDB)
-		gormDB.AutoMigrate(&entity.Product{}, &entity.ProductGroup{})
+		gormDB.AutoMigrate(&entity.Product{}, &entity.Group{})
 	default:
 		logger.Error(conf.Server.Repo.Driver + " is not allowed")
 		os.Exit(1)
@@ -112,17 +112,20 @@ func main() {
 	// repo
 	var beginner common.TxBeginner
 	var productRepo port.ProductRepo
+	var groupRepo port.GroupRepo
+
 	switch conf.Server.Repo.Driver {
 	case "pgx":
 		beginner = txcom.NewGormTxBeginner(gormDB)
 		productRepo = adapter.NewProductPg(gormDB)
+		groupRepo = adapter.NewGroupPg(gormDB)
 	default:
 		logger.Error(conf.Server.Repo.Driver + " is not allowed")
 		os.Exit(1)
 	}
 
 	// usecase
-	usc := usecase.NewProductUsc(beginner, productRepo)
+	usc := usecase.NewProductUsc(beginner, productRepo, groupRepo)
 
 	// http handler
 	handler = delivery.NewProductHttpHandler(defaultTimeout, usc)
@@ -170,5 +173,9 @@ var (
 func SetRoute(router *mux.Router, conf common.ConfigHttp) {
 	router.HandleFunc("/v1/product/{id}",
 		common.AuthBearerHandler(handler.HandleFindProduct, conf.BearerToken),
+	).Methods(http.MethodGet)
+
+	router.HandleFunc("/v1/product/group/{id}",
+		common.AuthBearerHandler(handler.HandleFindProductsByGroupID, conf.BearerToken),
 	).Methods(http.MethodGet)
 }

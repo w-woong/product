@@ -10,8 +10,8 @@ func init() {
 	structmapper.StoreMapper(&dto.Product{}, &entity.Product{})
 	structmapper.StoreMapper(&entity.Product{}, &dto.Product{})
 
-	structmapper.StoreMapper(&dto.ProductGroup{}, &entity.ProductGroup{})
-	structmapper.StoreMapper(&entity.ProductGroup{}, &dto.ProductGroup{})
+	structmapper.StoreMapper(&dto.Group{}, &entity.Group{})
+	structmapper.StoreMapper(&entity.Group{}, &dto.Group{})
 }
 
 func ToProductEntity(src *dto.Product) (res entity.Product, err error) {
@@ -24,12 +24,12 @@ func ToProductDto(src *entity.Product) (res dto.Product, err error) {
 	return
 }
 
-func ToProductGroupEntity(src *dto.ProductGroup) (res entity.ProductGroup, err error) {
+func ToGroupEntity(src *dto.Group) (res entity.Group, err error) {
 	err = structmapper.Map(src, &res)
 	return
 }
 
-func ToProductGroupDto(src *entity.ProductGroup) (res dto.ProductGroup, err error) {
+func ToGroupDto(src *entity.Group) (res dto.Group, err error) {
 	err = structmapper.Map(src, &res)
 	return
 }

@@ -2,6 +2,7 @@ package adapter_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,6 +17,9 @@ var (
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 1",
 		Price:  200000000123.1234,
+		Groups: entity.GroupList{
+			group1,
+		},
 	}
 
 	product2 = entity.Product{
@@ -51,4 +55,20 @@ func Test_productPg_CreateProduct(t *testing.T) {
 	assert.EqualValues(t, 1, affected)
 
 	assert.Nil(t, tx.Commit())
+}
+
+func Test_productPg_ReadProductNoTx(t *testing.T) {
+	if !onlinetest {
+		t.Skip("skipping online tests")
+	}
+
+	ctx := context.Background()
+
+	repo := adapter.NewProductPg(gdb)
+
+	res, err := repo.ReadProductNoTx(ctx, product1.ID)
+	assert.Nil(t, err)
+	// assert.EqualValues(t, 1, affected)
+	fmt.Println(res.String())
+
 }

@@ -8,4 +8,5 @@ import (
 
 type ProductUsc interface {
 	FindProduct(ctx context.Context, id string) (dto.Product, error)
+	FindProductsByGroupID(ctx context.Context, groupID string) (dto.ProductList, error)
 }

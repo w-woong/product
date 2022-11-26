@@ -40,7 +40,7 @@ func setup() error {
 			return err
 		}
 
-		gdb.AutoMigrate(&entity.Product{})
+		gdb.AutoMigrate(&entity.Product{}, &entity.Group{})
 	}
 	return nil
 }

@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	NilProduct      = Product{}
-	NilProductGroup = ProductGroup{}
+	NilProduct = Product{}
+	NilGroup   = Group{}
 )
 
 type Product struct {
@@ -18,6 +18,8 @@ type Product struct {
 	Name        string     `json:"name"`
 	Price       float64    `json:"price"`
 	Description string     `json:"description"`
+
+	Groups GroupList `json:"groups,omitempty"`
 }
 
 func (e *Product) String() string {
@@ -32,23 +34,24 @@ func (e *ProductList) String() string {
 	return string(b)
 }
 
-type ProductGroup struct {
+type Group struct {
 	ID          string     `json:"id"`
-	CreatedAt   *time.Time `json:"created_at"`
-	UpdatedAt   *time.Time `json:"updated_at"`
-	ProductID   string     `json:"product_id"`
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
+
+	Products ProductList `json:"products,omitempty"`
 }
 
-func (e *ProductGroup) String() string {
+func (e *Group) String() string {
 	b, _ := json.Marshal(e)
 	return string(b)
 }
 
-type ProductGroupList []ProductGroup
+type GroupList []Group
 
-func (e *ProductGroupList) String() string {
+func (e *GroupList) String() string {
 	b, _ := json.Marshal(e)
 	return string(b)
 }

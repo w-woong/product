@@ -84,8 +84,6 @@ github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2
 github.com/go-kit/log v0.1.0/go.mod h1:zbhenjAZHb184qTLMA9ZjW7ThYL0H2mk7Q6pNt4vbaY=
 github.com/go-logfmt/logfmt v0.5.0/go.mod h1:wCYkCAKZfumFQihp8CzCvQ3paCTfi41vtzG1KdI/P7A=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
-github.com/go-wonk/si v0.2.8 h1:6H6T+ftzATpknIV6dRHl0k42wsg3bWfq0kjbIGF9J9Y=
-github.com/go-wonk/si v0.2.8/go.mod h1:+DoaNjQK/z1vMzJvdhF3K2oyJf6QBe9Kqmfv6t1Saqo=
 github.com/go-wonk/si v0.2.11 h1:Qg/g9XKw6DN3sOaLvCBcrNqzFZpThe6soSRyekc1KzU=
 github.com/go-wonk/si v0.2.11/go.mod h1:+DoaNjQK/z1vMzJvdhF3K2oyJf6QBe9Kqmfv6t1Saqo=
 github.com/gofrs/uuid v4.0.0+incompatible h1:1SD/1F5pU8p29ybwgQSwpQk+mwdRrXCYuPhW6m+TnJw=
@@ -292,12 +290,10 @@ github.com/stretchr/testify v1.8.0 h1:pSgiaMZlXftHpm5L7V1+rVB+AZJydKsMxsQBIJw4PK
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
 github.com/subosito/gotenv v1.4.1 h1:jyEFiXpy21Wm81FBN71l9VoMMV8H8jG+qIK3GCpY6Qs=
 github.com/subosito/gotenv v1.4.1/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
-github.com/w-woong/common v0.0.12 h1:BW15TOpKgw4/RRXiD9O5rvveUrVrEMop0YSrhnaM9O0=
-github.com/w-woong/common v0.0.12/go.mod h1:wtqiJ7ftkMIt5hJeW5yh2AL9NjoZ5FMawh7iVXMtPLo=
 github.com/w-woong/common v0.0.13 h1:xExxoNX3BnqRhpfkPkijYTQcrS094/NsjtvEszpfKO8=
 github.com/w-woong/common v0.0.13/go.mod h1:wtqiJ7ftkMIt5hJeW5yh2AL9NjoZ5FMawh7iVXMtPLo=
-github.com/wonksing/structmapper v0.0.3 h1:Mj+jCVKn/Omw8nppug64p2NyqTC4drN/nbtgaRpuRv8=
-github.com/wonksing/structmapper v0.0.3/go.mod h1:adymR5XTDyTNUuUWHZNE5ODPwNCMQl2MAm+IggQCCKE=
+github.com/wonksing/structmapper v0.0.4 h1:AyDLkyLMdGS3Nuln9IMF6bNiQktcUUFv6k3wgY8UD48=
+github.com/wonksing/structmapper v0.0.4/go.mod h1:adymR5XTDyTNUuUWHZNE5ODPwNCMQl2MAm+IggQCCKE=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

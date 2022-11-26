@@ -8,6 +8,7 @@ import (
 	"github.com/w-woong/common/txcom"
 	"github.com/w-woong/product/entity"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type productPg struct {
@@ -45,6 +46,7 @@ func (a *productPg) readProduct(ctx context.Context, db *gorm.DB, id string) (en
 	var product entity.Product
 	res := db.WithContext(ctx).
 		Where("id = ?", id).
+		Preload(clause.Associations).
 		Limit(1).Find(&product)
 	if res.Error != nil {
 		return entity.NilProduct, txcom.ConvertErr(res.Error)
