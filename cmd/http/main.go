@@ -126,9 +126,11 @@ func main() {
 
 	// usecase
 	usc := usecase.NewProductUsc(beginner, productRepo, groupRepo)
+	groupUsc := usecase.NewGroupUsc(beginner, groupRepo)
 
 	// http handler
 	handler = delivery.NewProductHttpHandler(defaultTimeout, usc)
+	groupHandler = delivery.NewGroupHttpHandler(defaultTimeout, groupUsc)
 
 	// router
 	router := mux.NewRouter()
@@ -167,7 +169,8 @@ func main() {
 }
 
 var (
-	handler *delivery.ProductHttpHandler
+	handler      *delivery.ProductHttpHandler
+	groupHandler *delivery.GroupHttpHandler
 )
 
 func SetRoute(router *mux.Router, conf common.ConfigHttp) {
@@ -176,6 +179,6 @@ func SetRoute(router *mux.Router, conf common.ConfigHttp) {
 	).Methods(http.MethodGet)
 
 	router.HandleFunc("/v1/product/group/{id}",
-		common.AuthBearerHandler(handler.HandleFindProductsByGroupID, conf.BearerToken),
+		common.AuthBearerHandler(groupHandler.HandleFindGroup, conf.BearerToken),
 	).Methods(http.MethodGet)
 }
