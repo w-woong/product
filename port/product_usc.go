@@ -10,3 +10,7 @@ type ProductUsc interface {
 	FindProduct(ctx context.Context, id string) (dto.Product, error)
 	FindProductsByGroupID(ctx context.Context, groupID string) (dto.ProductList, error)
 }
+
+type GroupUsc interface {
+	FindGroup(ctx context.Context, id string) (dto.Group, error)
+}
