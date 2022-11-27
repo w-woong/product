@@ -27,12 +27,45 @@ var (
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 222222",
 		Price:  1234.1234,
+		Groups: entity.GroupList{
+			group1,
+		},
 	}
 	product3 = entity.Product{
 		ID:     "product3-f12e-4fa0-bf4f-ba002c11a671",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 3",
 		Price:  2000,
+		Groups: entity.GroupList{
+			group1,
+		},
+	}
+	product4 = entity.Product{
+		ID:     "product4-f12e-4fa0-bf4f-ba002c11a671",
+		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+		Name:   "product 4",
+		Price:  2000,
+		Groups: entity.GroupList{
+			group1,
+		},
+	}
+	product5 = entity.Product{
+		ID:     "product5-f12e-4fa0-bf4f-ba002c11a671",
+		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+		Name:   "product 5",
+		Price:  2000,
+		Groups: entity.GroupList{
+			group1,
+		},
+	}
+	product6 = entity.Product{
+		ID:     "product6-f12e-4fa0-bf4f-ba002c11a671",
+		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
+		Name:   "product 6",
+		Price:  2000,
+		Groups: entity.GroupList{
+			group1,
+		},
 	}
 )
 
@@ -54,6 +87,25 @@ func Test_productPg_CreateProduct(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, 1, affected)
 
+	affected, err = repo.CreateProduct(ctx, tx, product2)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1, affected)
+
+	affected, err = repo.CreateProduct(ctx, tx, product3)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1, affected)
+
+	affected, err = repo.CreateProduct(ctx, tx, product4)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1, affected)
+
+	affected, err = repo.CreateProduct(ctx, tx, product5)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1, affected)
+
+	affected, err = repo.CreateProduct(ctx, tx, product6)
+	assert.Nil(t, err)
+	assert.EqualValues(t, 1, affected)
 	assert.Nil(t, tx.Commit())
 }
 
