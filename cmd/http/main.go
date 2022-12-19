@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -18,6 +19,7 @@ import (
 	"github.com/w-woong/common"
 	"github.com/w-woong/common/configs"
 	"github.com/w-woong/common/logger"
+	"github.com/w-woong/common/middlewares"
 	"github.com/w-woong/common/txcom"
 	"github.com/w-woong/product/adapter"
 	"github.com/w-woong/product/delivery"
@@ -25,6 +27,11 @@ import (
 	"github.com/w-woong/product/port"
 	"github.com/w-woong/product/usecase"
 	"gorm.io/gorm"
+
+	// "go.elastic.co/apm/module/apmgorilla/v2"
+	postgresapm "go.elastic.co/apm/module/apmgormv2/v2/driver/postgres" // postgres with gorm
+	// _ "go.elastic.co/apm/module/apmsql/v2/pq" // postgres sql with pq
+	"go.elastic.co/apm/v2"
 )
 
 var (
@@ -71,6 +78,13 @@ func main() {
 	}
 	runtime.GOMAXPROCS(maxProc)
 
+	// apm
+	apmActive, _ := strconv.ParseBool(os.Getenv("ELASTIC_APM_ACTIVE"))
+	if apmActive {
+		tracer := apm.DefaultTracer()
+		defer tracer.Flush(nil)
+	}
+
 	// config
 	conf := common.Config{}
 	if err := configs.ReadConfigInto(configName, &conf); err != nil {
@@ -84,28 +98,61 @@ func main() {
 		conf.Logger.File.MaxAge, conf.Logger.File.Compressed)
 	defer logger.Close()
 
-	// db
-	sqlDB, err := si.OpenSqlDB(conf.Server.Repo.Driver, conf.Server.Repo.ConnStr,
-		conf.Server.Repo.MaxIdleConns, conf.Server.Repo.MaxOpenConns,
-		time.Duration(conf.Server.Repo.ConnMaxLifetimeMinutes)*time.Minute)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer sqlDB.Close()
-
 	// gorm
 	var gormDB *gorm.DB
 	switch conf.Server.Repo.Driver {
 	case "pgx":
-		gormDB, err = sigorm.OpenPostgres(sqlDB)
+		// // db
+		// sqlDB, err := si.OpenSqlDB(conf.Server.Repo.Driver, conf.Server.Repo.ConnStr,
+		// 	conf.Server.Repo.MaxIdleConns, conf.Server.Repo.MaxOpenConns,
+		// 	time.Duration(conf.Server.Repo.ConnMaxLifetimeMinutes)*time.Minute)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	os.Exit(1)
+		// }
+		// defer sqlDB.Close()
+		// gormDB, err = sigorm.OpenPostgres(sqlDB)
+		// if err != nil {
+		// 	logger.Error(err.Error())
+		// 	os.Exit(1)
+		// }
+
+		if apmActive {
+			gormDB, err = gorm.Open(postgresapm.Open(conf.Server.Repo.ConnStr),
+				&gorm.Config{Logger: logger.OpenGormLogger(conf.Server.Repo.LogLevel)},
+			)
+			if err != nil {
+				logger.Error(err.Error())
+				os.Exit(1)
+			}
+			db, err := gormDB.DB()
+			if err != nil {
+				logger.Error(err.Error())
+				os.Exit(1)
+			}
+			defer db.Close()
+		} else {
+			// db
+			// var db *sql.DB
+			db, err := si.OpenSqlDB(conf.Server.Repo.Driver, conf.Server.Repo.ConnStr,
+				conf.Server.Repo.MaxIdleConns, conf.Server.Repo.MaxOpenConns, time.Duration(conf.Server.Repo.ConnMaxLifetimeMinutes)*time.Minute)
+			if err != nil {
+				logger.Error(err.Error())
+				os.Exit(1)
+			}
+			defer db.Close()
+
+			gormDB, err = sigorm.OpenPostgresWithConfig(db,
+				&gorm.Config{Logger: logger.OpenGormLogger(conf.Server.Repo.LogLevel)},
+			)
+			if err != nil {
+				logger.Error(err.Error())
+				os.Exit(1)
+			}
+		}
 		gormDB.AutoMigrate(&entity.Product{}, &entity.Group{})
 	default:
 		logger.Error(conf.Server.Repo.Driver + " is not allowed")
-		os.Exit(1)
-	}
-	if err != nil {
-		logger.Error(err.Error())
 		os.Exit(1)
 	}
 
@@ -175,10 +222,10 @@ var (
 
 func SetRoute(router *mux.Router, conf common.ConfigHttp) {
 	router.HandleFunc("/v1/product/{id}",
-		common.AuthBearerHandler(handler.HandleFindProduct, conf.BearerToken),
+		middlewares.AuthBearerHandler(handler.HandleFindProduct, conf.BearerToken),
 	).Methods(http.MethodGet)
 
 	router.HandleFunc("/v1/product/group/{id}",
-		common.AuthBearerHandler(groupHandler.HandleFindGroup, conf.BearerToken),
+		middlewares.AuthBearerHandler(groupHandler.HandleFindGroup, conf.BearerToken),
 	).Methods(http.MethodGet)
 }
