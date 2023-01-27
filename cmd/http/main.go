@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"flag"
 	"fmt"
-	"net/http"
 	"os"
 	"runtime"
 	"strconv"
@@ -19,10 +18,9 @@ import (
 	"github.com/w-woong/common"
 	"github.com/w-woong/common/configs"
 	"github.com/w-woong/common/logger"
-	"github.com/w-woong/common/middlewares"
 	"github.com/w-woong/common/txcom"
 	"github.com/w-woong/product/adapter"
-	"github.com/w-woong/product/delivery"
+	"github.com/w-woong/product/cmd/route"
 	"github.com/w-woong/product/entity"
 	"github.com/w-woong/product/port"
 	"github.com/w-woong/product/usecase"
@@ -55,8 +53,8 @@ func init() {
 	flag.StringVar(&addr, "addr", ":49002", "listen address")
 	flag.BoolVar(&printVersion, "version", false, "print version")
 	flag.IntVar(&tickIntervalSec, "tick", 30, "tick interval in second")
-	flag.StringVar(&certKey, "key", "", "server key")
-	flag.StringVar(&certPem, "pem", "", "server pem")
+	flag.StringVar(&certKey, "key", "./certs/key.pem", "server key")
+	flag.StringVar(&certPem, "pem", "./certs/cert.pem", "server pem")
 	flag.IntVar(&readTimeout, "readTimeout", 30, "read timeout")
 	flag.IntVar(&writeTimeout, "writeTimeout", 30, "write timeout")
 	flag.StringVar(&configName, "config", "./configs/server.yml", "config file name")
@@ -70,8 +68,6 @@ func init() {
 }
 
 func main() {
-	defaultTimeout := 6 * time.Second
-
 	var err error
 
 	if printVersion {
@@ -180,13 +176,10 @@ func main() {
 	usc := usecase.NewProductUsc(beginner, productRepo, groupRepo)
 	groupUsc := usecase.NewGroupUsc(beginner, groupRepo)
 
-	// http handler
-	handler = delivery.NewProductHttpHandler(defaultTimeout, usc)
-	groupHandler = delivery.NewGroupHttpHandler(defaultTimeout, groupUsc)
-
 	// router
 	router := mux.NewRouter()
-	SetRoute(router, conf.Server.Http)
+	route.ProductRoute(router, conf.Server.Http, usc)
+	route.ProductGroupRoute(router, conf.Server.Http, groupUsc)
 
 	// http server
 	tlsConfig := sihttp.CreateTLSConfigMinTls(tls.VersionTLS12)
@@ -218,19 +211,4 @@ func main() {
 	ticker.Stop()
 	tickerDone <- true
 	logger.Info("finished")
-}
-
-var (
-	handler      *delivery.ProductHttpHandler
-	groupHandler *delivery.GroupHttpHandler
-)
-
-func SetRoute(router *mux.Router, conf common.ConfigHttp) {
-	router.HandleFunc("/v1/product/{id}",
-		middlewares.AuthBearerHandler(handler.HandleFindProduct, conf.BearerToken),
-	).Methods(http.MethodGet)
-
-	router.HandleFunc("/v1/product/group/{id}",
-		middlewares.AuthBearerHandler(groupHandler.HandleFindGroup, conf.BearerToken),
-	).Methods(http.MethodGet)
 }

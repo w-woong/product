@@ -3,6 +3,8 @@ package entity
 import (
 	"encoding/json"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 var (
@@ -14,7 +16,7 @@ var (
 type Product struct {
 	ID          string     `json:"id" gorm:"primaryKey;type:string;size:64"`
 	CreatedAt   *time.Time `json:"created_at,omitempty" gorm:"<-:create"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty" gorm:"<-:update"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty" gorm:"<-"`
 	ImgUrl      string     `json:"img_url" gorm:"type:string;size:2048"`
 	Name        string     `json:"name" gorm:"column:name;type:string;size:256;not null"`
 	Price       float64    `json:"price" gorm:"column:price;type:float;precision:16;scale:4;not null"`
@@ -28,6 +30,18 @@ func (e *Product) String() string {
 	return string(b)
 }
 
+func (e Product) CreateID() string {
+	return uuid.New().String()
+}
+
+func (e *Product) CreateSetID() {
+	e.ID = e.CreateID()
+}
+
+func (e Product) IsNil() bool {
+	return e.ID == ""
+}
+
 type ProductList []Product
 
 func (e *ProductList) String() string {
@@ -38,7 +52,7 @@ func (e *ProductList) String() string {
 type Group struct {
 	ID          string     `json:"id" gorm:"primaryKey;type:string;size:64"`
 	CreatedAt   *time.Time `json:"created_at,omitempty" gorm:"<-:create"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty" gorm:"<-:update"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty" gorm:"<-"`
 	Name        string     `json:"name" gorm:"column:name;type:string;size:256;not null"`
 	Description string     `json:"description" gorm:"column:description;type:string"`
 
@@ -48,6 +62,18 @@ type Group struct {
 func (e *Group) String() string {
 	b, _ := json.Marshal(e)
 	return string(b)
+}
+
+func (e Group) CreateID() string {
+	return uuid.New().String()
+}
+
+func (e *Group) CreateSetID() {
+	e.ID = e.CreateID()
+}
+
+func (e Group) IsNil() bool {
+	return e.ID == ""
 }
 
 type GroupList []Group

@@ -5,9 +5,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-wonk/si"
 	"github.com/gorilla/mux"
 	"github.com/w-woong/common"
 	"github.com/w-woong/common/logger"
+	"github.com/w-woong/product/dto"
 	"github.com/w-woong/product/port"
 )
 
@@ -20,6 +22,35 @@ func NewGroupHttpHandler(timeout time.Duration, usc port.GroupUsc) *GroupHttpHan
 	return &GroupHttpHandler{
 		timeout: timeout,
 		usc:     usc,
+	}
+}
+
+func (d *GroupHttpHandler) AddGroupHandle(w http.ResponseWriter, r *http.Request) {
+	var o dto.Group
+	reqBody := common.HttpBody{
+		Document: &o,
+	}
+	if err := si.DecodeJson(&reqBody, r.Body); err != nil {
+		common.HttpError(w, http.StatusBadRequest)
+		logger.Error(err.Error(), logger.UrlField(r.URL.String()))
+		return
+	}
+	rowsAffected, err := d.usc.AddGroup(r.Context(), o)
+	if err != nil {
+		common.HttpError(w, http.StatusInternalServerError)
+		logger.Error(err.Error(), logger.UrlField(r.URL.String()))
+		return
+	}
+
+	if rowsAffected != 1 {
+		common.HttpError(w, http.StatusInternalServerError)
+		logger.Error("group was not added", logger.UrlField(r.URL.String()))
+		return
+	}
+
+	if err := common.HttpBodyOK.EncodeTo(w); err != nil {
+		logger.Error(err.Error(), logger.UrlField(r.URL.String()))
+		return
 	}
 }
 

@@ -25,6 +25,28 @@ func NewProductUsc(beginner common.TxBeginner,
 	}
 }
 
+func (u *productUsc) AddProduct(ctx context.Context, o dto.Product) (int64, error) {
+	tx, err := u.beginner.Begin()
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback()
+
+	e, err := conv.ToProductEntity(&o)
+	if err != nil {
+		return 0, err
+	}
+	if e.ID == "" {
+		e.CreateSetID()
+	}
+	res, err := u.productRepo.CreateProduct(ctx, tx, e)
+	if err != nil {
+		return 0, err
+	}
+
+	return res, tx.Commit()
+}
+
 func (u *productUsc) FindProduct(ctx context.Context, id string) (dto.Product, error) {
 	product, err := u.productRepo.ReadProductNoTx(ctx, id)
 	if err != nil {

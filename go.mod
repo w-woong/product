@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/go-wonk/si v0.2.12
+	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.8.0
 	github.com/w-woong/common v0.0.51
