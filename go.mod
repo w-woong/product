@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/stretchr/testify v1.8.0
-	github.com/w-woong/common v0.0.51
+	github.com/w-woong/common v0.0.57
 	github.com/wonksing/structmapper v0.0.4
 	go.elastic.co/apm/module/apmgormv2/v2 v2.2.0
 	go.elastic.co/apm/v2 v2.2.0
