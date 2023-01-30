@@ -18,7 +18,7 @@ func Test_groupHttp_ReadGroup(t *testing.T) {
 	ctx := context.Background()
 
 	groupHttp := adapter.NewGroupHttp(sihttp.DefaultInsecureClient(),
-		"http://localhost:49002", "ab2316584873095f017f6dfa7a9415794f563fcc473eb3fe65b9167e37fd5a4b")
+		"https://localhost:49002", "ab2316584873095f017f6dfa7a9415794f563fcc473eb3fe65b9167e37fd5a4b")
 
 	res, err := groupHttp.ReadGroup(ctx, group1.ID)
 	assert.Nil(t, err)

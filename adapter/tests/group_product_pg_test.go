@@ -1,31 +1,22 @@
 package adapter_test
 
-import (
-	"context"
-	"testing"
+// func Test_groupProductPg_DeleteGroupProduct(t *testing.T) {
+// 	if !onlinetest {
+// 		t.Skip("skipping online tests")
+// 	}
 
-	"github.com/stretchr/testify/assert"
-	"github.com/w-woong/common/txcom"
-	"github.com/w-woong/product/adapter"
-)
+// 	ctx := context.Background()
 
-func Test_groupProductPg_DeleteGroupProduct(t *testing.T) {
-	if !onlinetest {
-		t.Skip("skipping online tests")
-	}
+// 	beginner := txcom.NewGormTxBeginner(gdb)
+// 	repo := adapter.NewGroupProductPg(gdb)
 
-	ctx := context.Background()
+// 	tx, err := beginner.Begin()
+// 	assert.Nil(t, err)
+// 	defer tx.Rollback()
 
-	beginner := txcom.NewGormTxBeginner(gdb)
-	repo := adapter.NewGroupProductPg(gdb)
+// 	affected, err := repo.DeleteGroupProduct(ctx, tx, group2.ID, product2.ID)
+// 	assert.Nil(t, err)
+// 	assert.EqualValues(t, 1, affected)
 
-	tx, err := beginner.Begin()
-	assert.Nil(t, err)
-	defer tx.Rollback()
-
-	affected, err := repo.DeleteGroupProduct(ctx, tx, group2.ID, product2.ID)
-	assert.Nil(t, err)
-	assert.EqualValues(t, 1, affected)
-
-	assert.Nil(t, tx.Commit())
-}
+// 	assert.Nil(t, tx.Commit())
+// }

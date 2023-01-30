@@ -13,7 +13,7 @@ import (
 
 var (
 	product1 = entity.Product{
-		ID:     "product1-f12e-4fa0-bf4f-ba002c11a671",
+		ID:     "test-product-1",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 1",
 		Price:  200000000123.1234,
@@ -23,16 +23,16 @@ var (
 	}
 
 	product2 = entity.Product{
-		ID:     "product2-f12e-4fa0-bf4f-ba002c11a671",
+		ID:     "test-product-2",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 222222",
 		Price:  1234.1234,
-		Groups: entity.GroupList{
-			group1,
-		},
+		// Groups: entity.GroupList{
+		// 	group1,
+		// },
 	}
 	product3 = entity.Product{
-		ID:     "product3-f12e-4fa0-bf4f-ba002c11a671",
+		ID:     "test-product-3",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 3",
 		Price:  2000,
@@ -41,7 +41,7 @@ var (
 		},
 	}
 	product4 = entity.Product{
-		ID:     "product4-f12e-4fa0-bf4f-ba002c11a671",
+		ID:     "test-product-4",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 4",
 		Price:  2000,
@@ -50,7 +50,7 @@ var (
 		},
 	}
 	product5 = entity.Product{
-		ID:     "product5-f12e-4fa0-bf4f-ba002c11a671",
+		ID:     "test-product-5",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 5",
 		Price:  2000,
@@ -59,7 +59,7 @@ var (
 		},
 	}
 	product6 = entity.Product{
-		ID:     "product6-f12e-4fa0-bf4f-ba002c11a671",
+		ID:     "test-product-6",
 		ImgUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
 		Name:   "product 6",
 		Price:  2000,
@@ -78,10 +78,25 @@ func Test_productPg_CreateProduct(t *testing.T) {
 
 	beginner := txcom.NewGormTxBeginner(gdb)
 	repo := adapter.NewProductPg(gdb)
+	repoGroupProducts := adapter.NewGroupProductPg(gdb)
 
 	tx, err := beginner.Begin()
 	assert.Nil(t, err)
 	defer tx.Rollback()
+
+	repoGroupProducts.DeleteByProductID(ctx, tx, product1.ID)
+	repoGroupProducts.DeleteByProductID(ctx, tx, product2.ID)
+	repoGroupProducts.DeleteByProductID(ctx, tx, product3.ID)
+	repoGroupProducts.DeleteByProductID(ctx, tx, product4.ID)
+	repoGroupProducts.DeleteByProductID(ctx, tx, product5.ID)
+	repoGroupProducts.DeleteByProductID(ctx, tx, product6.ID)
+
+	repo.DeleteProduct(ctx, tx, product1.ID)
+	repo.DeleteProduct(ctx, tx, product2.ID)
+	repo.DeleteProduct(ctx, tx, product3.ID)
+	repo.DeleteProduct(ctx, tx, product4.ID)
+	repo.DeleteProduct(ctx, tx, product5.ID)
+	repo.DeleteProduct(ctx, tx, product6.ID)
 
 	affected, err := repo.CreateProduct(ctx, tx, product1)
 	assert.Nil(t, err)

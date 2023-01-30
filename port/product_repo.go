@@ -30,4 +30,5 @@ type GroupProductRepo interface {
 	UpdateGroupProduct(ctx context.Context, tx common.TxController, groupID, productID string, groupProduct entity.GroupProduct) (int64, error)
 	DeleteGroupProduct(ctx context.Context, tx common.TxController, groupID, productID string) (int64, error)
 	DeleteByGroupID(ctx context.Context, tx common.TxController, groupID string) (int64, error)
+	DeleteByProductID(ctx context.Context, tx common.TxController, productID string) (int64, error)
 }

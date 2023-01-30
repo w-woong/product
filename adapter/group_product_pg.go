@@ -7,9 +7,12 @@ import (
 	"github.com/w-woong/common/logger"
 	"github.com/w-woong/common/txcom"
 	"github.com/w-woong/product/entity"
+	"github.com/w-woong/product/port"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
+
+var _ port.GroupProductRepo = (*groupProductPg)(nil)
 
 type groupProductPg struct {
 	db *gorm.DB
@@ -91,6 +94,18 @@ func (a *groupProductPg) DeleteByGroupID(ctx context.Context, tx common.TxContro
 	res := tx.(*txcom.GormTxController).Tx.
 		WithContext(ctx).
 		Where("group_id = ?", groupID).
+		Delete(&entity.GroupProduct{})
+	if res.Error != nil {
+		logger.Error(res.Error.Error())
+		return 0, txcom.ConvertErr(res.Error)
+	}
+	return res.RowsAffected, nil
+}
+func (a *groupProductPg) DeleteByProductID(ctx context.Context, tx common.TxController, productID string) (int64, error) {
+
+	res := tx.(*txcom.GormTxController).Tx.
+		WithContext(ctx).
+		Where("product_id = ?", productID).
 		Delete(&entity.GroupProduct{})
 	if res.Error != nil {
 		logger.Error(res.Error.Error())

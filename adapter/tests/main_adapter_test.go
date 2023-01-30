@@ -28,7 +28,7 @@ func setup() error {
 			return err
 		}
 		db.SetMaxIdleConns(3)
-		db.SetMaxOpenConns(3)
+		db.SetMaxOpenConns(25)
 		db.SetConnMaxLifetime(3 * time.Minute)
 
 		gdb, err = gorm.Open(postgres.New(postgres.Config{
