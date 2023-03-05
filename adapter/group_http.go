@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-wonk/si/v2/sicore"
 	"github.com/go-wonk/si/v2/sihttp"
-	"github.com/w-woong/common"
+	commondto "github.com/w-woong/common/dto"
 	"github.com/w-woong/product/dto"
 )
 
@@ -43,7 +43,7 @@ func NewGroupHttp(client *http.Client, baseUrl string, bearerToken string) *grou
 func (a *groupHttp) ReadGroup(ctx context.Context, id string) (dto.Group, error) {
 
 	group := dto.Group{}
-	res := common.HttpBody{
+	res := commondto.HttpBody{
 		Document: &group,
 	}
 

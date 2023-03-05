@@ -3,19 +3,19 @@ package usecase
 import (
 	"context"
 
-	"github.com/w-woong/common"
+	commonport "github.com/w-woong/common/port"
 	"github.com/w-woong/product/conv"
 	"github.com/w-woong/product/dto"
 	"github.com/w-woong/product/port"
 )
 
 type productUsc struct {
-	beginner    common.TxBeginner
+	beginner    commonport.TxBeginner
 	productRepo port.ProductRepo
 	groupRepo   port.GroupRepo
 }
 
-func NewProductUsc(beginner common.TxBeginner,
+func NewProductUsc(beginner commonport.TxBeginner,
 	productRepo port.ProductRepo, groupRepo port.GroupRepo) *productUsc {
 
 	return &productUsc{

@@ -5,13 +5,13 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/w-woong/common"
+	commondto "github.com/w-woong/common/dto"
 	"github.com/w-woong/common/middlewares"
 	"github.com/w-woong/product/delivery"
 	"github.com/w-woong/product/port"
 )
 
-func ProductRoute(router *mux.Router, conf common.ConfigHttp, usc port.ProductUsc) *delivery.ProductHttpHandler {
+func ProductRoute(router *mux.Router, conf commondto.ConfigHttp, usc port.ProductUsc) *delivery.ProductHttpHandler {
 
 	handler := delivery.NewProductHttpHandler(time.Duration(conf.Timeout)*time.Second, usc)
 
@@ -24,7 +24,7 @@ func ProductRoute(router *mux.Router, conf common.ConfigHttp, usc port.ProductUs
 	return handler
 }
 
-func ProductGroupRoute(router *mux.Router, conf common.ConfigHttp, usc port.GroupUsc) *delivery.GroupHttpHandler {
+func ProductGroupRoute(router *mux.Router, conf commondto.ConfigHttp, usc port.GroupUsc) *delivery.GroupHttpHandler {
 
 	handler := delivery.NewGroupHttpHandler(time.Duration(conf.Timeout)*time.Second, usc)
 

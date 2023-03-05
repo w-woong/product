@@ -3,8 +3,9 @@ package adapter
 import (
 	"context"
 
-	"github.com/w-woong/common"
+	commondto "github.com/w-woong/common/dto"
 	"github.com/w-woong/common/logger"
+	commonport "github.com/w-woong/common/port"
 	"github.com/w-woong/common/txcom"
 	"github.com/w-woong/product/entity"
 	"gorm.io/gorm"
@@ -21,7 +22,7 @@ func NewGroupPg(db *gorm.DB) *groupPg {
 	}
 }
 
-func (a *groupPg) CreateGroup(ctx context.Context, tx common.TxController, group entity.Group) (int64, error) {
+func (a *groupPg) CreateGroup(ctx context.Context, tx commonport.TxController, group entity.Group) (int64, error) {
 	res := tx.(*txcom.GormTxController).Tx.WithContext(ctx).
 		Create(&group)
 
@@ -33,7 +34,7 @@ func (a *groupPg) CreateGroup(ctx context.Context, tx common.TxController, group
 	return res.RowsAffected, nil
 }
 
-func (a *groupPg) ReadGroup(ctx context.Context, tx common.TxController, id string) (entity.Group, error) {
+func (a *groupPg) ReadGroup(ctx context.Context, tx commonport.TxController, id string) (entity.Group, error) {
 	return a.readGroup(ctx, tx.(*txcom.GormTxController).Tx, id)
 }
 
@@ -51,13 +52,13 @@ func (a *groupPg) readGroup(ctx context.Context, db *gorm.DB, id string) (entity
 		return entity.NilGroup, txcom.ConvertErr(res.Error)
 	}
 	if res.RowsAffected == 0 {
-		return entity.NilGroup, common.ErrRecordNotFound
+		return entity.NilGroup, commondto.ErrRecordNotFound
 	}
 
 	return group, nil
 }
 
-func (a *groupPg) UpdateGroup(ctx context.Context, tx common.TxController, id string, group entity.Group) (int64, error) {
+func (a *groupPg) UpdateGroup(ctx context.Context, tx commonport.TxController, id string, group entity.Group) (int64, error) {
 	res := tx.(*txcom.GormTxController).Tx.
 		WithContext(ctx).
 		Model(&group).
@@ -70,7 +71,7 @@ func (a *groupPg) UpdateGroup(ctx context.Context, tx common.TxController, id st
 
 	return res.RowsAffected, nil
 }
-func (a *groupPg) DeleteGroup(ctx context.Context, tx common.TxController, id string) (int64, error) {
+func (a *groupPg) DeleteGroup(ctx context.Context, tx commonport.TxController, id string) (int64, error) {
 	res := tx.(*txcom.GormTxController).Tx.
 		WithContext(ctx).
 		Delete(&entity.Group{ID: id})

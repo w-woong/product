@@ -3,18 +3,18 @@ package usecase
 import (
 	"context"
 
-	"github.com/w-woong/common"
+	commonport "github.com/w-woong/common/port"
 	"github.com/w-woong/product/conv"
 	"github.com/w-woong/product/dto"
 	"github.com/w-woong/product/port"
 )
 
 type groupUsc struct {
-	beginner  common.TxBeginner
+	beginner  commonport.TxBeginner
 	groupRepo port.GroupRepo
 }
 
-func NewGroupUsc(beginner common.TxBeginner, groupRepo port.GroupRepo) *groupUsc {
+func NewGroupUsc(beginner commonport.TxBeginner, groupRepo port.GroupRepo) *groupUsc {
 	return &groupUsc{
 		beginner:  beginner,
 		groupRepo: groupRepo,

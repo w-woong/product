@@ -3,8 +3,9 @@ package adapter
 import (
 	"context"
 
-	"github.com/w-woong/common"
+	commondto "github.com/w-woong/common/dto"
 	"github.com/w-woong/common/logger"
+	commonport "github.com/w-woong/common/port"
 	"github.com/w-woong/common/txcom"
 	"github.com/w-woong/product/entity"
 	"github.com/w-woong/product/port"
@@ -24,7 +25,7 @@ func NewGroupProductPg(db *gorm.DB) *groupProductPg {
 	}
 }
 
-func (a *groupProductPg) CreateGroupProduct(ctx context.Context, tx common.TxController,
+func (a *groupProductPg) CreateGroupProduct(ctx context.Context, tx commonport.TxController,
 	groupProduct entity.GroupProduct) (int64, error) {
 
 	res := tx.(*txcom.GormTxController).Tx.WithContext(ctx).Create(&groupProduct)
@@ -35,7 +36,7 @@ func (a *groupProductPg) CreateGroupProduct(ctx context.Context, tx common.TxCon
 	return res.RowsAffected, nil
 }
 
-func (a *groupProductPg) ReadGroupProduct(ctx context.Context, tx common.TxController,
+func (a *groupProductPg) ReadGroupProduct(ctx context.Context, tx commonport.TxController,
 	groupID, productID string) (entity.GroupProduct, error) {
 	return a.readGroupProduct(ctx, tx.(*txcom.GormTxController).Tx, groupID, productID)
 }
@@ -55,13 +56,13 @@ func (a *groupProductPg) readGroupProduct(ctx context.Context, db *gorm.DB,
 		return entity.NilGroupProduct, txcom.ConvertErr(res.Error)
 	}
 	if res.RowsAffected == 0 {
-		return entity.NilGroupProduct, common.ErrRecordNotFound
+		return entity.NilGroupProduct, commondto.ErrRecordNotFound
 	}
 
 	return groupProduct, nil
 }
 
-func (a *groupProductPg) UpdateGroupProduct(ctx context.Context, tx common.TxController,
+func (a *groupProductPg) UpdateGroupProduct(ctx context.Context, tx commonport.TxController,
 	groupID, productID string, groupProduct entity.GroupProduct) (int64, error) {
 
 	res := tx.(*txcom.GormTxController).Tx.
@@ -77,7 +78,7 @@ func (a *groupProductPg) UpdateGroupProduct(ctx context.Context, tx common.TxCon
 
 	return res.RowsAffected, nil
 }
-func (a *groupProductPg) DeleteGroupProduct(ctx context.Context, tx common.TxController, groupID, productID string) (int64, error) {
+func (a *groupProductPg) DeleteGroupProduct(ctx context.Context, tx commonport.TxController, groupID, productID string) (int64, error) {
 	res := tx.(*txcom.GormTxController).Tx.
 		WithContext(ctx).
 		Where("group_id = ? and product_id = ?", groupID, productID).
@@ -88,7 +89,7 @@ func (a *groupProductPg) DeleteGroupProduct(ctx context.Context, tx common.TxCon
 	}
 	return res.RowsAffected, nil
 }
-func (a *groupProductPg) DeleteByGroupID(ctx context.Context, tx common.TxController,
+func (a *groupProductPg) DeleteByGroupID(ctx context.Context, tx commonport.TxController,
 	groupID string) (int64, error) {
 
 	res := tx.(*txcom.GormTxController).Tx.
@@ -101,7 +102,7 @@ func (a *groupProductPg) DeleteByGroupID(ctx context.Context, tx common.TxContro
 	}
 	return res.RowsAffected, nil
 }
-func (a *groupProductPg) DeleteByProductID(ctx context.Context, tx common.TxController, productID string) (int64, error) {
+func (a *groupProductPg) DeleteByProductID(ctx context.Context, tx commonport.TxController, productID string) (int64, error) {
 
 	res := tx.(*txcom.GormTxController).Tx.
 		WithContext(ctx).

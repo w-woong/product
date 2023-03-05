@@ -15,10 +15,12 @@ import (
 	"github.com/go-wonk/si/v2/sigorm"
 	"github.com/go-wonk/si/v2/sihttp"
 	"github.com/gorilla/mux"
-	"github.com/w-woong/common"
 	"github.com/w-woong/common/configs"
+	commondto "github.com/w-woong/common/dto"
 	"github.com/w-woong/common/logger"
+	commonport "github.com/w-woong/common/port"
 	"github.com/w-woong/common/txcom"
+	"github.com/w-woong/common/wrapper"
 	"github.com/w-woong/product/adapter"
 	"github.com/w-woong/product/cmd/route"
 	"github.com/w-woong/product/entity"
@@ -84,7 +86,7 @@ func main() {
 	}
 
 	// config
-	conf := common.Config{}
+	conf := commondto.Config{}
 	if err := configs.ReadConfigInto(configName, &conf); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -154,7 +156,7 @@ func main() {
 	}
 
 	// repo
-	var beginner common.TxBeginner
+	var beginner commonport.TxBeginner
 	var productRepo port.ProductRepo
 	var groupRepo port.GroupRepo
 
@@ -194,12 +196,12 @@ func main() {
 	// ticker
 	ticker := time.NewTicker(time.Duration(tickIntervalSec) * time.Second)
 	tickerDone := make(chan bool)
-	common.StartTicker(tickerDone, ticker, func(t time.Time) {
+	wrapper.StartTicker(tickerDone, ticker, func(t time.Time) {
 		logger.Info(fmt.Sprintf("NoOfGR:%v, %v", runtime.NumGoroutine(), t))
 	})
 
 	// signal, wait for it to shutdown http server.
-	common.StartSignalStopper(httpServer, syscall.SIGINT, syscall.SIGTERM)
+	wrapper.StartSignalStopper(httpServer, syscall.SIGINT, syscall.SIGTERM)
 
 	// start
 	logger.Info("start listening on " + addr)
