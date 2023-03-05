@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/go-wonk/si/sicore"
-	"github.com/go-wonk/si/sihttp"
+	"github.com/go-wonk/si/v2/sicore"
+	"github.com/go-wonk/si/v2/sihttp"
 	"github.com/w-woong/common"
 	"github.com/w-woong/product/dto"
 )
@@ -47,7 +47,7 @@ func (a *groupHttp) ReadGroup(ctx context.Context, id string) (dto.Group, error)
 		Document: &group,
 	}
 
-	err := a.client.RequestGetDecodeContext(ctx, "/v1/product/group/"+id, nil, nil, &res)
+	err := a.client.GetDecodeContext(ctx, "/v1/product/group/"+id, nil, nil, &res)
 	if err != nil {
 		return dto.NilGroup, err
 	}

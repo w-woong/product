@@ -11,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/go-wonk/si"
-	"github.com/go-wonk/si/sigorm"
-	"github.com/go-wonk/si/sihttp"
+	"github.com/go-wonk/si/v2"
+	"github.com/go-wonk/si/v2/sigorm"
+	"github.com/go-wonk/si/v2/sihttp"
 	"github.com/gorilla/mux"
 	"github.com/w-woong/common"
 	"github.com/w-woong/common/configs"
